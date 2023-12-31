@@ -1,24 +1,26 @@
-import React, { useRef, useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import { Comp } from "./Comp";
-import { Link, Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Home } from "./components/Home";
 import { NotFound } from "./components/NotFound";
 import { About } from "./components/About";
 import { Layout } from "./components/Layout";
 import { Posts } from "./components/Posts";
 import { PostDetails } from "./components/PostDetails";
-import { createContext } from "react";
 import { AuthGuard } from "./components/AuthGuard";
 import { Login } from "./components/Login";
+import { createContext, useState } from "react";
 
-export const AuthContext = createContext<{user: string | undefined}>({ user: undefined });
+export const AuthContext = createContext<{
+  user: string | undefined;
+  setUser: Function;
+}>({ user: undefined, setUser: () => {} });
 
 function App() {
   console.log("render App");
+  const [user, setUser] = useState<string>();
+
   return (
-    <AuthContext.Provider value={{ user: undefined }}>
+    <AuthContext.Provider value={{ user, setUser }}>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />

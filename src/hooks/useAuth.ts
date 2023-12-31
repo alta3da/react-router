@@ -3,6 +3,5 @@ import { AuthContext } from "../App"
 
 
 export const useAuth = () => {
-  const {user} = useContext(AuthContext)
-  return !!user
+  return useContext(AuthContext)
 }
