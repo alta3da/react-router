@@ -1,8 +1,11 @@
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../App";
 import { useLocation, useNavigate, useNavigation } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-export const Login = () => {
+export const Login = () => {  
+  const auth = useAuth()
+  const [showForm, setShowForm] = useState(auth)
   const context = useContext(AuthContext);
   const location = useLocation();
   const navigation = useNavigate();
@@ -15,19 +18,21 @@ export const Login = () => {
       .username.value;
     console.log("userName: ", userName);
     context.user = userName;
-    if (location.state.from) navigation(location.state.from);
+    setShowForm(!!context.user)
+    if (location?.state?.from) navigation(location?.state?.from);
   };
 
   const handleLogout = () => {
     context.user = undefined;
+    setShowForm(!!context.user)
   };
 
   return (
     <>
-      <form onSubmit={(e) => handleSubmit(e)} ref={ref}>
+      {!auth && <form onSubmit={(e) => handleSubmit(e)} ref={ref}>
         <input type="text" name="username"></input>
         <button type="submit">Submit</button>
-      </form>
+      </form>}
       <br />
       <button onClick={handleLogout}>Logout</button>
     </>
