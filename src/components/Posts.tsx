@@ -1,25 +1,32 @@
-import { useEffect, useState } from "react";
 import { Post } from "./Post";
+import { Await, defer, useLoaderData } from "react-router-dom";
 import { IPostDetails } from "./PostDetails";
+import { Suspense } from "react";
 
 export const Posts = () => {
-  const [posts, setPosts] = useState<IPostDetails[]>([]);
+  const { posts } = useLoaderData() as { posts: IPostDetails[] };
+  console.log("posts: ", posts);
+  return (
+    <Suspense fallback={<h3>Loading posts...</h3>}>
+      <Await resolve={posts}>
+        {(resolvedPosts) => <>{
+          resolvedPosts.map((post: IPostDetails) => (
+            <Post post={post} key={`post_${post.id}`} />
+          ))
+        }
+        </>}
+      </Await>
+    </Suspense>
+  );
+};
 
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("json: ", json);
-        setPosts(json);
-      });
-  }, []);
-  if (posts?.length)
-    return (
-      <>
-        {posts.map((post) => (
-          <Post post={post} key={`post_${post.id}`}/>
-        ))}
-      </>
-    );
-  return <h3>No posts</h3>;
+async function loadPosts() {
+  const postsRes = await fetch("https://jsonplaceholder.typicode.com/posts");
+  return await postsRes.json();
+}
+
+export const postsLoader = async () => {
+  return defer({
+    posts: loadPosts(),
+  });
 };

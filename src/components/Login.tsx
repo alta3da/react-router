@@ -14,8 +14,12 @@ export const Login = () => {
     const userName = (ref.current as unknown as { username: { value: string } })
       .username.value;
     console.log("userName: ", userName);
-    setUser(userName)
-    if (location?.state?.from) navigation(location?.state?.from);
+    if(userName !== user){
+      setUser(userName)
+      if (location?.state?.from) navigation(location?.state?.from);
+    }
+      
+    
   };
 
   return (

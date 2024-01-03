@@ -4,7 +4,7 @@ export const Layout = () => {
   return (
     <>
       <nav>
-        <NavLink to="/" style={{margin: "20px"}}>Home</NavLink>
+        <NavLink to="/" end style={{margin: "20px"}}>Home</NavLink>
         <NavLink to="/about" style={{margin: "20px"}}>About</NavLink>
         <NavLink to="/posts" style={{margin: "20px"}}>Posts</NavLink>
         <NavLink to="/login" style={{margin: "20px"}}>Login</NavLink>

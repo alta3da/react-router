@@ -1,5 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Suspense, useEffect, useState } from "react";
+import {
+  Await,
+  defer,
+  useAsyncValue,
+  useLoaderData,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 export interface IPostDetails {
   body: string;
@@ -9,29 +16,40 @@ export interface IPostDetails {
 }
 
 export const PostDetails = () => {
-  const { id } = useParams();
-  const navigation = useNavigate()
-  const [post, setPost] = useState<IPostDetails>();
-  const goBack= () => navigation(-1)
+  const { post } = useLoaderData() as { post: IPostDetails };
+  console.log("post: ", post);
+  const navigation = useNavigate();
+  const goBack = () => navigation(-1);
 
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("json: ", json);
-        setPost(json);
-      });
-  }, []);
-
-  if(!post)
-    return <div>loading...</div>
-  return (   
-      <div>
-        <h3>
-          {post?.id}: {post?.title}
-        </h3>
-        <p>{post?.body}</p>
-        <button onClick={goBack}>Back</button>
-      </div>    
+  return (
+    <>
+      <Suspense fallback={<h3>Loadig post...</h3>}>
+        <Await resolve={post}>
+          {(resolvedPost) =>
+            <>
+              <h3>
+                {resolvedPost?.id}: {resolvedPost?.title}
+              </h3>
+              <p>{resolvedPost?.body}</p>
+            </>
+          }
+        </Await>
+      </Suspense>
+      <button onClick={goBack}>Back</button>
+    </>
   );
+};
+
+async function loadPost(id: number) {
+  const postsRes = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${id}`
+  );
+  return await postsRes.json();
+}
+
+export const postLoader = async ({ params }: { params: any }) => {
+  console.log("params: ", params);
+  return defer({
+    post: loadPost(params.id),
+  });
 };

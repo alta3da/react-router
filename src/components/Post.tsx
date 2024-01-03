@@ -11,3 +11,5 @@ export const Post = ({ post }: { post: IPostDetails }) => {
     </div>
   );
 };
+
+

@@ -1,14 +1,7 @@
 import "./App.css";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { Home } from "./components/Home";
-import { NotFound } from "./components/NotFound";
-import { About } from "./components/About";
-import { Layout } from "./components/Layout";
-import { Posts } from "./components/Posts";
-import { PostDetails } from "./components/PostDetails";
-import { AuthGuard } from "./components/AuthGuard";
-import { Login } from "./components/Login";
+import { RouterProvider } from "react-router-dom";
 import { createContext, useState } from "react";
+import { router } from "./routes/router";
 
 export const AuthContext = createContext<{
   user: string | undefined;
@@ -21,27 +14,7 @@ function App() {
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/about-us"
-            element={<Navigate to="/about" replace={true} />}
-          />
-          <Route
-            path="/posts"
-            element={
-              <AuthGuard>
-                <Posts />
-              </AuthGuard>
-            }
-          />
-          <Route path="/posts/:id" element={<PostDetails />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <RouterProvider router={router}/>
     </AuthContext.Provider>
   );
 }
