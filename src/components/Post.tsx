@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { IPostDetails } from "./PostDetails";
+import { IPostDetails } from "../types/index.types";
 
 export const Post = ({ post }: { post: IPostDetails }) => {
   // console.log("render Post >>>")

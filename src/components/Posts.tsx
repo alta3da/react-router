@@ -1,7 +1,7 @@
 import { Post } from "./Post";
 import { Await, defer, useLoaderData } from "react-router-dom";
-import { IPostDetails } from "./PostDetails";
 import { Suspense } from "react";
+import { IPostDetails } from "../types/index.types";
 
 export const Posts = () => {
   const { posts } = useLoaderData() as { posts: IPostDetails[] };
